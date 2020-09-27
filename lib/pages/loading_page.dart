@@ -3,16 +3,21 @@ import 'package:chat_app/pages/usuarios_page.dart';
 import 'package:chat_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[100],
       body: FutureBuilder(
         future: checkLoginState(context),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           return Center(
-            child: Text('Espere ...'),
+            child: SpinKitRipple(
+              color: Colors.white,
+              size: 50.0,
+            ),
           );
         },
       ),
@@ -31,7 +36,7 @@ class LoadingPage extends StatelessWidget {
               pageBuilder: (_, __, ___) => UsuariosPage(),
               transitionDuration: Duration(milliseconds: 0)));
     } else {
-      // Navigator.pushReplacementNamed(context, 'login');
+      // // Navigator.pushReplacementNamed(context, 'login');
       Navigator.pushReplacement(
           context,
           PageRouteBuilder(
