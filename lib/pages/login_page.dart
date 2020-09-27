@@ -1,8 +1,11 @@
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/buttonBlue_custom.dart';
 import 'package:chat_app/widgets/input_custom.dart';
 import 'package:chat_app/widgets/label_custom.dart';
 import 'package:chat_app/widgets/logo_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -46,6 +49,7 @@ class __FormState extends State<_Form> {
   final passCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context, listen: false);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -70,10 +74,27 @@ class __FormState extends State<_Form> {
           // InputCustomWidget()
           ButtonBlue(
             texto: 'Ingrese',
-            onPress: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-            },
+            onPress: authService.autenticando
+                ? null
+                : () async {
+                    print(emailCtrl.text);
+                    print(passCtrl.text);
+                    FocusScope.of(context).unfocus();
+
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+
+                    if (loginOk) {
+                      // navegar a otra pantall
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      // mostrar alerta
+                      mostrarAlerta(
+                          context: context,
+                          titulo: 'Login incorrecto',
+                          subtitulo: 'Revie sus credenciales');
+                    }
+                  },
           )
         ],
       ),

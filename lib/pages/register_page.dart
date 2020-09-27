@@ -1,8 +1,11 @@
+import 'package:chat_app/helpers/mostrar_alerta.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/buttonBlue_custom.dart';
 import 'package:chat_app/widgets/input_custom.dart';
 import 'package:chat_app/widgets/label_custom.dart';
 import 'package:chat_app/widgets/logo_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -47,6 +50,7 @@ class __FormState extends State<_Form> {
   final passCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -78,11 +82,26 @@ class __FormState extends State<_Form> {
           // InputCustomWidget()
           ButtonBlue(
             texto: 'Ingrese',
-            onPress: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-              print(nameCtrl.text);
-            },
+            onPress: authService.autenticando
+                ? null
+                : () async {
+                    print(nameCtrl.text);
+                    print(emailCtrl.text);
+                    print(passCtrl.text);
+                    final registroOk = await authService.register(
+                        nameCtrl.text.trim(),
+                        emailCtrl.text.trim(),
+                        passCtrl.text.trim());
+                    if (registroOk == true) {
+                      //Conectar al socket server
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      mostrarAlerta(
+                          context: context,
+                          titulo: 'Registro incorrecto',
+                          subtitulo: registroOk);
+                    }
+                  },
           )
         ],
       ),
