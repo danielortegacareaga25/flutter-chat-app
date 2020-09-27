@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+
+class InputCustomWidget extends StatelessWidget {
+  final IconData icon;
+  final String placeholder;
+  final TextEditingController textController;
+  final TextInputType keyboardType;
+  final bool isPassword;
+
+  const InputCustomWidget(
+      {Key key,
+      @required this.icon,
+      @required this.placeholder,
+      @required this.textController,
+      this.keyboardType = TextInputType.text,
+      this.isPassword = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 5, left: 15, bottom: 5, right: 20),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                offset: Offset(0, 5),
+                blurRadius: 5),
+          ]),
+      child: TextField(
+          controller: this.textController,
+          autocorrect: false,
+          obscureText: this.isPassword,
+          keyboardType: this.keyboardType,
+          decoration: InputDecoration(
+            focusedBorder: InputBorder.none,
+            border: InputBorder.none,
+            hintText: this.placeholder,
+            icon: Icon(this.icon),
+          )
+
+          // obscureText: true,
+          ),
+    );
+  }
+}
